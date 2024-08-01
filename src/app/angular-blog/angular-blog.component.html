@@ -1,0 +1,77 @@
+<div class="top">
+    <h1>Angular Blog</h1>
+
+    <div *ngIf="!headerBtnUser">
+      <button class="top-btn btn-signIn" (click)="signIn()">Sign In</button>
+      <button class="top-btn btn-signUp" (click)="signUp()">Sign Up</button>
+    </div>
+  
+    <div *ngIf="headerBtnUser" class="user-auth-btn-container">
+      <button class="top-btn btn-addPost" (click)="addPost()">Add post</button>
+      <div class="user">{{ currentUser?.username }}</div>
+      <button class="top-btn btn-signOut" (click)="signOut()">Sign out</button>
+    </div>
+  </div>
+  
+  <!-- Sign In Form -->
+  <div *ngIf="signInForm" class="modal-block">
+    <div class="signInForm">
+      <h2 class="name-form">Sign In</h2>
+      <p>Email:</p>
+      <input [(ngModel)]="signInData.email" class="input" type="text">
+      <p>Password:</p>
+      <input [(ngModel)]="signInData.password" class="input" type="password">
+      <div class="btn-bottom">
+        <button class="btn-close btn" (click)="closeSignIn()">Close</button>
+        <button [disabled]="!signInData.email || !signInData.password" class="btn-submit btn" (click)="submitSignIn()">Submit</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Sign Up Form -->
+  <div *ngIf="signUpForm" class="modal-block">
+    <div class="signUpForm">
+      <h2 class="name-form">Sign Up</h2>
+      <p>User name:</p>
+      <input [(ngModel)]="signUpData.username" class="input" type="text">
+      <p>Email:</p>
+      <input [(ngModel)]="signUpData.email" class="input" type="text">
+      <p>Password:</p>
+      <input [(ngModel)]="signUpData.password" class="input" type="password">
+      <div *ngIf="signUpError" class="error-message">{{ signUpError }}</div> <!-- Відображення помилки -->
+      <div class="btn-bottom">
+        <button class="btn-close btn" (click)="closeSignUp()">Close</button>
+        <button [disabled]="!signUpData.username|| !signUpData.email|| !signUpData.password" class="btn-submit-blue btn" (click)="submitSignUp()">Submit</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add post -->
+  <div *ngIf="addPostForm" class="modal-block">
+    <div class="addForm">
+        <h2 class="name-form">Add post</h2>
+        <p>Title:</p>
+        <input [(ngModel)]="newPost.topic" class="input" type="text">
+        <p>Text:</p>
+        <textarea [(ngModel)]="newPost.message" class="textarea"></textarea>
+        <div class="btn-bottom">
+            <button class="btn-close btn" (click)="closeAddPost()">Close</button>
+            <button *ngIf="editStatus" class="btn-post btn" (click)="post()">Post</button>
+            <button *ngIf="!editStatus" class="btn-post btn" (click)="updatePost()">Edit post</button>
+        </div>
+    </div>
+</div>
+  
+  <!-- list of posts -->
+  <div class="main-content" *ngFor="let post of posts">
+    <h2 class="title-post">{{ post.topic }}</h2>
+    <div class="about">
+      <span>Posted by: {{ post.postedBy }}</span>
+      <div class="date">{{ post.date | date: 'dd/MM/yyyy HH:mm:ss' }}</div>
+    </div>
+    <div class="message">{{ post.message }}</div>
+    <div *ngIf="btnInBox && (post.postedBy === currentUser?.username || currentUser?.username === 'admin')" class="btn-in-box">
+      <button class="btn-edit" (click)="editPost(post)">Edit</button>
+      <button class="btn-delete" (click)="deletePost(post)">Delete</button>
+    </div>
+  </div>
